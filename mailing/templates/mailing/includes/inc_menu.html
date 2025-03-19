@@ -1,0 +1,104 @@
+<nav class="sidebar d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary">
+    <a href="{% url 'home' %}"
+       class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+        <span class="fs-4">Главная</span>
+    </a>
+    <hr>
+    <ul class="nav nav-pills flex-column mb-auto">
+        {% if user.is_authenticated %}
+            <li class="nav-item text-start">
+                <a href="{% url 'mailing:recipient_list' %}"
+                   class="nav-link link-body-emphasis {% if request.path == '/mailing/recipient/' %}active{% endif %}"
+                   aria-current="page">
+                    <svg class="bi pe-none me-2" width="16" height="16">
+                    </svg>
+                    Получатели рассылки
+                </a>
+            </li>
+            <li class="nav-item text-start">
+                <a href="{% url 'mailing:message_list' %}"
+                   class="nav-link link-body-emphasis {% if request.path == '/mailing/messages/' %}active{% endif %}"
+                   aria-current="page">
+                    <svg class="bi pe-none me-2" width="16" height="16">
+                    </svg>
+                    Сообщения
+                </a>
+            </li>
+            <li class="nav-item text-start">
+                <a href="{% url 'mailing:mailing_list' %}"
+                   class="nav-link link-body-emphasis {% if request.path == '/mailing/mailings/' %}active{% endif %}"
+                   aria-current="page">
+                    <svg class="bi pe-none me-2" width="16" height="16">
+                    </svg>
+                    Рассылка
+                </a>
+            </li>
+            <li class="nav-item text-start">
+                <a href="{% url 'mailing:mailing_report' %}"
+                   class="nav-link link-body-emphasis {% if request.path == '/mailing/mailings/report/' %}active{% endif %}"
+                   aria-current="page">
+                    <svg class="bi pe-none me-2" width="16" height="16">
+                    </svg>
+                    Попытки рассылки
+                </a>
+            </li>
+            {% if 'Менеджеры' in user.groups.all|join:', ' %}
+                <li class="nav-item text-start">
+                <a href="{% url 'users:customuser_list' user.id  %}"
+                   class="nav-link link-body-emphasis {% if request.path == 'users/user/<int:user_id>/' %}active{% endif %}"
+                   aria-current="page">
+                    <svg class="bi pe-none me-2" width="16" height="16">
+                    </svg>
+                    Список пользователей
+                </a>
+                </li>
+            {% endif %}
+            <hr>
+        {% else %}
+            <li>
+                <a href="{% url 'users:login' %}"
+                   class="nav-link link-body-emphasis {% if request.path == '/contact/' %}active{% endif %}">
+                    <svg class="bi pe-none me-2" width="16" height="16">
+                    </svg>
+                    Войти
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'users:register' %}"
+                   class="nav-link link-body-emphasis {% if request.path == '/contact/' %}active{% endif %}">
+                    <svg class="bi pe-none me-2" width="16" height="16">
+                    </svg>
+                    Регистрация
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+    <hr>
+    {% if user.is_authenticated %}
+        <div class="dropdown">
+            <a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle"
+               data-bs-toggle="dropdown" aria-expanded="false">
+                {% if user.avatar %}
+                    <img src="{{ user.avatar.url }}" alt="Avatar" width="32" height="32" class="rounded-circle me-2">
+                {% else %}
+                    {% load static %}
+                    <img src="/media/users/avatars/default_avatar/osek.jpg" alt="Avatar" width="32" height="32"
+                         class="rounded-circle me-2">
+                {% endif %}
+                <strong>{{ user.username }}</strong>
+            </a>
+            <ul class="dropdown-menu text-small shadow">
+                <li><a class="dropdown-item" href="#">Профиль</a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li>
+                    <form method="post" action="{% url 'users:logout' %}" style="display: inline">
+                        {% csrf_token %}
+                        <button type="submit" class="dropdown-item">Выход</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    {% endif %}
+</nav>

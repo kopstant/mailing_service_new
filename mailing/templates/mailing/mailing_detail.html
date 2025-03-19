@@ -1,0 +1,29 @@
+{% extends "mailing/base.html" %}
+
+{% block title %}Подробности рассылки{% endblock %}
+
+{% block content %}
+    <h2 class="text-center">Подробная информация о рассылки</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <p><strong>Начало:</strong> {{ mailing.first_sent_at }}</p>
+                    <p><strong>Окончание:</strong> {{ mailing.end_sent_at }}</p>
+                    <p><strong>Статус:</strong> {{ mailing.status }}</p>
+                    <p><strong>Сообщение:</strong> {{ mailing.message.subject_of_the_letter }}</p>
+                    <p><strong>Получатели:</strong>
+                        {% for recipient in mailing.recipients.all %}
+                            {{ recipient.email }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </p>
+                    <p><strong>Владелец:</strong> {{ mailing.owner }}</p>
+                    <p><strong>Дата последней отправки:</strong> {{ mailing.last_sent }}</p>
+                </div>
+                <a href="{% url 'mailing:mailing_list' %}" class="btn btn-primary">Назад</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+

@@ -1,0 +1,19 @@
+{% extends "mailing/base.html" %}
+
+{% block title %}Подробности о сообщении{% endblock %}
+
+{% block content %}
+    <h2 class="text-center">Подробная информация о сообщении</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header text-center">
+                    <p><strong>Тема письма:</strong> {{ message.subject_of_the_letter }}</p>
+                    <p><strong>Тело письма:</strong> {{ message.letter_body }}</p>
+                    <a href="{% url 'mailing:message_list' %}" class="btn btn-primary">Назад</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

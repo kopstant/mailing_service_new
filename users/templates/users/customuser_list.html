@@ -1,0 +1,46 @@
+{% extends "mailing/base.html" %}
+
+{% block title %}Список пользователей{% endblock %}
+
+{% block content %}
+    <div class="row m-auto">
+        <div class="col-12 text-center">
+            <h1>Зарегистрированные пользователи</h1>
+            <p>Здесь вы сможете ознакомиться с зарегистрированными пользователями</p>
+            <div class="col-md-auto">
+                <div class="row text-center">
+                    {% for customuser in customusers %}
+                        <div class="col-4">
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    <p>id пользователя: {{ customuser.id }}</p>
+
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text text-start mb-3"> Email: {{ customuser.email }}</p>
+                                    <p class="card-text text-start mb-3"> Username: {{ customuser.username }}</p>
+                                    <p class="card-text text-start mb-3"> Статус: {{ customuser.is_active }}</p>
+                                    <p class="card-text text-start mb-3"> Статус: {{ customuser.is_blocked }}</p>
+                                    </form>
+                                </div>
+                                {% if 'Менеджеры' in user.groups.all|join:', ' %}
+                                    <form method="post" action="{% url 'users:block_user' customuser.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger">
+                                            {% if customuser.is_blocked %}
+                                                Разблокировать
+                                            {% else %}
+                                                Заблокировать
+                                            {% endif %}
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

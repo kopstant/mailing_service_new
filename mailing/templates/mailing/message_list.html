@@ -1,0 +1,36 @@
+{% extends "mailing/base.html" %}
+
+{% block title %}Список писем{% endblock %}
+
+{% block content %}
+    <div class="row m-auto">
+        <div class="col-12 text-center">
+            <h1>Доступные письма</h1>
+            <p>Здесь вы сможете ознакомиться с письмами</p>
+            <div class="col-md-auto">
+                <a href="{% url 'mailing:message_create' %}" class="btn btn-primary mb-3">Добавить новое письмо</a>
+                <div class="row text-center">
+                    {% for message in messages %}
+                        <div class="col-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <p>id письма: {{ message.pk }}</p>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text text-start">Тема письма: {{ message.subject_of_the_letter }}</p>
+                                    <p class="card-text text-start">Тело письма: {{ message.letter_body }}</p>
+                                    <a href="{% url 'mailing:message_detail' message.pk %}"
+                                       class="btn btn-primary">Подробнее</a>
+                                    <a href="{% url 'mailing:message_update' message.pk %}"
+                                       class="btn btn-primary">Редактирование</a>
+                                    <a href="{% url 'mailing:message_delete' message.pk %}"
+                                       class="btn btn-primary">Удалить</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

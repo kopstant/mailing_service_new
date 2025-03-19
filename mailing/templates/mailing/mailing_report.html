@@ -1,0 +1,47 @@
+{% extends "mailing/base.html" %}
+
+{% block title %}Отчет по рассылкам{% endblock %}
+
+{% block content %}
+    <h2 class="text-center">Подробная информация о рассылки</h2>
+    <div class="row justify-content-center align-items-center">
+        <div class="text-center">
+            <h2>Общая статистика</h2>
+            <p>Успешных попыток: {{ success_count }}</p>
+            <p>Неуспешных попыток: {{ failure_count }}</p>
+            <p>Всего отправлено сообщений: {{ total_messages }}</p>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Время попытки</th>
+                        <th>Рассылка</th>
+                        <th>Статус</th>
+                        <th>Ответ сервера</th>
+                        <th>Рассылка</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for attempt in attempts %}
+                        <tr>
+                            <td>{{ attempt.created_at }}</td>
+                            <td>{{ attempt.mailing }}</td>
+                            <td>{{ attempt.status }}</td>
+                            <td>{{ attempt.response }}</td>
+                            <td>{{ attempt.mailing }}</td>
+                        </tr>
+                    {% empty %}
+                        <p>Нет попыток</p>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <a href="{% url 'mailing:mailing_list' %}" class="btn btn-primary text-center">Назад</a>
+        </div>
+    </div>
+    </div>
+{% endblock %}
+
+

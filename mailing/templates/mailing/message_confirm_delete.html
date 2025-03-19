@@ -1,0 +1,23 @@
+{% extends "mailing/base.html" %}
+
+{% block title %}Удаление сообщения{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center text-center">
+        <div class="col-md-6">
+            <div class="card">
+                {% if user == message.owner %}
+                    <h2>Удалить сообщение - {{ message.subject_of_the_letter }}?</h2>
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Удалить</button>
+                        <a href="{% url 'mailing:message_list' %}" class="btn btn-primary">Отмена</a>
+                    </form>
+                {% else %}
+                    <p>У вас нет прав для удаления.</p>
+                    <a href="{% url 'mailing:recipient_list' %}">Вернуться назад</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
