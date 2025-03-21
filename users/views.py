@@ -2,11 +2,12 @@ from django.contrib.auth import login
 from django.core.mail import send_mail
 from django.urls import reverse_lazy
 from django.urls.base import reverse
-from django.views.generic.edit import FormView
+from django.views.generic import FormView, DetailView
 from django.contrib import messages
 from django.views.generic import ListView
+from django.shortcuts import render
 
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, ProfileUpdateForm
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -15,6 +16,7 @@ from .forms import CustomPasswordResetForm, CustomSetPasswordForm
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 
 from .models import CustomUser
 
@@ -22,6 +24,16 @@ from .models import CustomUser
 class CustomUserListView(LoginRequiredMixin, ListView):
     model = CustomUser
     context_object_name = 'customusers'
+
+
+# Профиль
+class CustomUserProfileView(LoginRequiredMixin, DetailView):
+    model = CustomUser
+    template_name = 'users/customuser_profile.html'
+    context_object_name = 'customuser_profile'
+
+    def get_object(self, queryset=None):
+        return self.request.user
 
 
 class RegisterView(FormView):
@@ -70,10 +82,6 @@ class CustomPasswordResetConfirmView(auth_views.PasswordResetConfirmView):  # П
     success_url = reverse_lazy('users:password_reset_complete')  # Должен уводить на страницу об успешном сбросе пароля
 
 
-class CustomPasswordResetCompleteView(auth_views.PasswordResetCompleteView):  # После смены пароля по ссылке.
-    success_url = '/users/login/'  # Путь для редиректа
-
-
 class CustomPasswordResetDoneView(auth_views.PasswordResetDoneView):
     template_name = 'users/password_reset_done.html'
 
@@ -107,3 +115,19 @@ def block_user(request, user_id):
             messages.success(request, f'Пользователь {user_to_block.email} разблокирован.')
 
     return redirect('home')
+
+
+@login_required
+def profile_edit(request):
+    user = request.user  # Текущий пользователь
+
+    if request.method == 'POST':
+        form = ProfileUpdateForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            form.save()
+            # Перенаправление на страницу профиля с user_id
+            return redirect(reverse('users:user_profile', args=[user.id]))
+    else:
+        form = ProfileUpdateForm(instance=user)
+
+    return render(request, 'users/profile_edit.html', {'form': form})

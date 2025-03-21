@@ -107,7 +107,6 @@ class Mailing(models.Model):
                 )
 
         success_count = TryMailing.objects.filter(mailing=self, status=TryMailing.SUCCESS).count()
-        failure_count = TryMailing.objects.filter(mailing=self, status=TryMailing.FAILURE).count()
 
         self.last_sent = now()
         if success_count > 0:

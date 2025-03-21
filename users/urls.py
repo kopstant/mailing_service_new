@@ -2,9 +2,9 @@ from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
 
 from users.apps import UsersConfig
-from users.views import RegisterView, verify_email, block_user, CustomPasswordResetCompleteView, CustomUserListView
+from users.views import RegisterView, verify_email, block_user, CustomPasswordResetCompleteView, CustomUserListView, \
+    CustomUserProfileView, profile_edit
 
-from django.contrib.auth import views as auth_views
 from .views import CustomPasswordResetView, CustomPasswordResetConfirmView, CustomPasswordResetDoneView
 
 app_name = UsersConfig.name
@@ -22,4 +22,6 @@ urlpatterns = [
 
     path('user/<int:user_id>/', CustomUserListView.as_view(), name='customuser_list'),
     path('user/<int:user_id>/block/', block_user, name='block_user'),
+    path('profile/<int:user_id>/', CustomUserProfileView.as_view(), name='user_profile'),
+    path('profile/edit/', profile_edit, name='profile_edit'),
 ]
