@@ -49,3 +49,9 @@ class CustomSetPasswordForm(SetPasswordForm):
     class Meta:
         model = CustomUser
         fields = ['new_password1', 'new_password2']
+
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'email', 'phone_number', 'avatar', 'country']
